@@ -1,0 +1,42 @@
+<configuration>
+    <property name="console.log.pattern"
+              value="%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{36}:%line%n) - %msg%n"/>
+    <property name="file.log.pattern" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"/>
+    <property name="file.log.dir" value="./logs"/>
+    <property name="file.log.filename" value="logback"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${console.log.pattern}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${file.log.dir}/${file.log.filename}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Log file will roll over daily -->
+            <fileNamePattern>${file.log.dir}/${file.log.filename}-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- Keep 30 days' worth of logs -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${file.log.pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ROLLING_FILE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ROLLING_FILE"/>
+        </root>
+    </springProfile>
+
+</configuration>
