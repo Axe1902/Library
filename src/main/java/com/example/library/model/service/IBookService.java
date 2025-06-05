@@ -9,10 +9,12 @@ import java.util.Optional;
 
 public interface IBookService
 {
-    Page<Book> findAll(Pageable pageable);
+    Page<Book> findAllOrderByTitle(Pageable pageable);
+    Page<Book> findAllOrderByTitleDesc(Pageable pageable);
     Optional<Book> findById(Integer id);
     List<Book> findByAuthorId(Integer authorId);
     List<Book> findTop10ByOrderByIdDesc();
+    List<Book> findByTitle(String title);
     Book save(Book book);
     void deleteById(Integer id);
 }

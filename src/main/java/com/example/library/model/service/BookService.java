@@ -20,14 +20,25 @@ public class BookService implements IBookService
     }
 
     @Override
-    public Page<Book> findAll(Pageable pageable) {
-        return bookRepository.findAll(pageable);
+    public Page<Book> findAllOrderByTitle(Pageable pageable) {
+        return bookRepository.findAllByOrderByTitle(pageable);
+    }
+
+    @Override
+    public Page<Book> findAllOrderByTitleDesc(Pageable pageable) {
+        return bookRepository.findAllByOrderByTitleDesc(pageable);
     }
 
     @Override
     public List<Book> findTop10ByOrderByIdDesc()
     {
         return bookRepository.findTop10ByOrderByIdDesc();
+    }
+
+    @Override
+    public List<Book> findByTitle(String title)
+    {
+        return bookRepository.findByTitleILike(title);
     }
 
     @Override

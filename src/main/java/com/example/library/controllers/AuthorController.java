@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/authors")
 public class AuthorController
@@ -35,12 +37,31 @@ public class AuthorController
             @RequestParam(value = "limit", defaultValue = "20") int limit
     )
     {
+        logger.info("Получен запрос на получение списка авторов по алфавиту.");
+        logger.debug("Страница: {}, лимит: {}", page, limit);
+
+        Pageable pageable = PageRequest.of(page, limit);
+
+        var result = authorService.findAllOrderByFirstName(pageable).map(dtoMapper::toDto);
+
+        logger.info("Список авторов получен.");
+        logger.debug(result.stream().toList().toString());
+
+        return result;
+    }
+
+    @GetMapping("/desc")
+    public Page<AuthorDto> getAllAuthorsDesc(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "20") int limit
+    )
+    {
         logger.info("Получен запрос на получение списка авторов.");
         logger.debug("Страница: {}, лимит: {}", page, limit);
 
         Pageable pageable = PageRequest.of(page, limit);
 
-        var result = authorService.findAll(pageable).map(dtoMapper::toDto);
+        var result = authorService.findAllOrderByFirstNameDesc(pageable).map(dtoMapper::toDto);
 
         logger.info("Список авторов получен.");
         logger.debug(result.stream().toList().toString());
@@ -59,6 +80,18 @@ public class AuthorController
         logger.info("Автор с идентификатором {} получен.", id);
 
         return ResponseEntity.ok(dtoMapper.toDto(result));
+    }
+
+    @GetMapping("/find/firstname")
+    public List<AuthorDto> getAuthorByFirstName(@RequestParam(value = "firstName") String firstName)
+    {
+        logger.info("Получен запрос на поиск автора по фамилии.");
+
+        var result = authorService.findByFirstName(firstName).stream().map(dtoMapper::toDto).toList();
+
+        logger.info("Автор найден.");
+
+        return result;
     }
 
     @PostMapping

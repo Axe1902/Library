@@ -41,15 +41,46 @@ public class BookController
             @RequestParam(value = "limit", defaultValue = "20") int limit
     )
     {
-        logger.info("Получен запрос на получение списка книг.");
+        logger.info("Получен запрос на получение списка книг по алфавиту.");
         logger.debug("Страница: {}, лимит: {}", page, limit);
 
         Pageable pageable = PageRequest.of(page, limit);
 
-        var result = bookService.findAll(pageable).map(dtoMapper::toDto);
+        var result = bookService.findAllOrderByTitle(pageable).map(dtoMapper::toDto);
 
         logger.info("Список книг получен.");
         logger.debug(result.stream().toList().toString());
+
+        return result;
+    }
+
+    @GetMapping("/desc")
+    public Page<BookDto> getAllBooksDesc(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "20") int limit
+    )
+    {
+        logger.info("Получен запрос на получение списка книг по алфавиту с конца.");
+        logger.debug("Страница: {}, лимит: {}", page, limit);
+
+        Pageable pageable = PageRequest.of(page, limit);
+
+        var result = bookService.findAllOrderByTitleDesc(pageable).map(dtoMapper::toDto);
+
+        logger.info("Список книг получен.");
+        logger.debug(result.stream().toList().toString());
+
+        return result;
+    }
+
+    @GetMapping("/find")
+    public List<BookDto> findBookByTitle(@RequestParam(value = "title") String title)
+    {
+        logger.info("Получен запрос на поиск книги по названию.");
+
+        var result = bookService.findByTitle(title).stream().map(dtoMapper::toDto).toList();
+
+        logger.info("Книга получена.");
 
         return result;
     }

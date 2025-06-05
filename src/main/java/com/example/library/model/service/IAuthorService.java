@@ -9,8 +9,10 @@ import java.util.Optional;
 
 public interface IAuthorService
 {
-    Page<Author> findAll(Pageable pageable);
+    Page<Author> findAllOrderByFirstName(Pageable pageable);
+    Page<Author> findAllOrderByFirstNameDesc(Pageable pageable);
     Optional<Author> findById(Integer id);
+    List<Author> findByFirstName(String title);
     Author save(Author author);
     void deleteById(Integer id);
 }

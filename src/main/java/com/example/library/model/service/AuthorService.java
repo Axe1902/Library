@@ -21,13 +21,23 @@ public class AuthorService implements IAuthorService
     }
 
     @Override
-    public Page<Author> findAll(Pageable pageable) {
-        return authorRepository.findAll(pageable);
+    public Page<Author> findAllOrderByFirstName(Pageable pageable) {
+        return authorRepository.findAllByOrderByFirstName(pageable);
+    }
+
+    @Override
+    public Page<Author> findAllOrderByFirstNameDesc(Pageable pageable) {
+        return authorRepository.findAllByOrderByFirstNameDesc(pageable);
     }
 
     @Override
     public Optional<Author> findById(Integer id) {
         return authorRepository.findById(id);
+    }
+
+    @Override
+    public List<Author> findByFirstName(String firstName) {
+        return authorRepository.findByFirstNameILike(firstName);
     }
 
     @Override
